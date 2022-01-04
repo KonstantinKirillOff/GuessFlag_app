@@ -19,15 +19,13 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            Rectangle()
-                .fill(
-                    LinearGradient(
-                        gradient: Gradient(colors: [.white, .black]),
-                        startPoint: UnitPoint(x: 0, y: 1),
-                        endPoint: UnitPoint(x: 1, y: 0)
-                    )
-                )
-                .ignoresSafeArea()
+            LinearGradient(
+                gradient: Gradient(colors: [.black, .white]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+            .edgesIgnoringSafeArea(.all)
             VStack {
                 Text("Выбери флаг:")
                     .font(.title)
@@ -43,8 +41,6 @@ struct ContentView: View {
                                 self.totalScore -= 1
                             }
                             self.isPresenred = true
-                            self.countries = countries.shuffled()
-                            self.currentCountry = Int.random(in: 0...2)
                         }) {
                             Image(countries[item])
                                 .resizable()
@@ -54,7 +50,9 @@ struct ContentView: View {
                                 .shadow(radius: 4)
                         }
                         .alert(isPresented: $isPresenred) {
-                            Alert(title: Text("Total score"), message: Text("Total score is \(totalScore)"), dismissButton: .default(Text("Ok")))
+                            Alert(title: Text("Total score"), message: Text("Total score is \(totalScore)"), dismissButton: .default(Text("Ok")) {
+                                self.ascQuestion()
+                            })
                         }
                     }
                     Text("Total score: \(totalScore)")
@@ -64,6 +62,11 @@ struct ContentView: View {
                 Spacer()
             }.foregroundColor(.white)
         }
+    }
+    
+    func ascQuestion() {
+        self.countries = countries.shuffled()
+        self.currentCountry = Int.random(in: 0...2)
     }
 }
 
